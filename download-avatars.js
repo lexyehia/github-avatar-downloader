@@ -1,8 +1,10 @@
+require('dotenv').config()
+
 const request = require('request'),
       fs      = require('fs')
 
 const GITHUB_USER  = "lexyehia",
-      GITHUB_TOKEN = "7201ee1afb501d72a00d043eee85d9910020d441"
+      GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
 
 console.log("Welcome to the GitHub avatar downloader!")
