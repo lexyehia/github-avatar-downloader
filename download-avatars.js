@@ -3,18 +3,21 @@ require('dotenv').config()
 const request = require('request'),
       fs      = require('fs')
 
-const GITHUB_USER  = "lexyehia",
-      GITHUB_TOKEN = process.env.GITHUB_TOKEN,
-      GITHUB_BASE  = `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos`
-
-
 console.log("Welcome to the GitHub avatar downloader!")
 
 // Send a request for a list of avatar urls
 function getRepoContributors(repoOwner, repoName, cb) {
 
-    validateArguments(repoOwner, repoName, (options) => {
+    let options = {
+        url: `https://${process.env.GITHUB_TOKEN}@api.github.com/`,
+        headers: {
+            'User-Agent': 'LHL Exercise'
+        }
+    }
 
+    // Validate both environment variable, then arguments,
+    // then retrieve contributors list
+    validateEnvironmentVariable(repoOwner, repoName, options, validateArguments, (options) => {
         options.url += '/contributors'
 
         request(options, (error, response, body) => {
@@ -43,7 +46,7 @@ function downloadImageByURL(url, filePath) {
 
 // Make sure that the arguments provided lead to a
 // repo that actually exists on Github
-function validateArguments(repoOwner, repoName, cb) {
+function validateArguments(repoOwner, repoName, options, cb) {
 
     // Check validity of arguments inputted
     if (process.argv.length !== 4) {
@@ -54,13 +57,7 @@ function validateArguments(repoOwner, repoName, cb) {
         throw Error("Did not provide proper Rep Name as second argument")
     } else {
 
-        // Check whether Repo exists on Github
-        const options = {
-            url: `${GITHUB_BASE}/${repoOwner}/${repoName}`,
-            headers: {
-                'User-Agent': 'LHL Exercise'
-            }
-        }
+        options.url += `repos/${repoOwner}/${repoName}`
 
         request(options, (error, response, body) => {
 
@@ -75,6 +72,23 @@ function validateArguments(repoOwner, repoName, cb) {
     }
 }
 
+function validateEnvironmentVariable(repoOwner, repoName, options, cb, cb2) {
+    if(!fs.existsSync('.env')) {
+        throw Error("Cannot locate a valid .env file, please create one at project root")
+    }
+
+    if (process.env.GITHUB_TOKEN) {
+
+        request(options, (error, response, body) => {
+            if (response.statusCode == 401) {
+                throw Error("Invalid Github Token in .env file")
+            } else {
+                cb(repoOwner, repoName, options, cb2)
+            }
+        })
+    }
+}
+
 // Call the main function getRepoContributors and
 // provide anonymous callback that sets out where to store image files
 getRepoContributors(process.argv[2], process.argv[3], (response) => {
@@ -82,3 +96,4 @@ getRepoContributors(process.argv[2], process.argv[3], (response) => {
         downloadImageByURL(r['avatar_url'], `${r['login']}.png`)
     })
 })
+
