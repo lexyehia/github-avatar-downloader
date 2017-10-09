@@ -1,4 +1,5 @@
-const request = require('request')
+const request = require('request'),
+      fs      = require('fs')
 
 const GITHUB_USER  = "lexyehia",
       GITHUB_TOKEN = "7201ee1afb501d72a00d043eee85d9910020d441"
@@ -26,4 +27,9 @@ function retrieveAvatars(response) {
     console.log(result)
 }
 
+function downloadImageByURL(url, filePath) {
+    request.get(url).pipe(fs.createWriteStream(filePath))
+}
+
 getRepoContributors("jquery", "jquery", retrieveAvatars)
+downloadImageByURL("https://avatars3.githubusercontent.com/u/46987?v=4", "./avatars/random.png")
