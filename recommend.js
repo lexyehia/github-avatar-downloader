@@ -2,7 +2,7 @@
 
 require('dotenv').config()
 
-const downloader = require('./download-avatars').downloader,
+const downloader = require('./helpers'),
       request    = require('request')
 
 
