@@ -1,3 +1,5 @@
+"use strict";
+
 require('dotenv').config()
 
 const request = require('request'),
@@ -44,6 +46,12 @@ function downloadImageByURL(url, filePath) {
     }
 }
 
+function retrieveContributorsAvatars(response) {
+    response.forEach(r => {
+        downloadImageByURL(r['avatar_url'], `${r['login']}.png`)
+    })
+}
+
 // Make sure that the arguments provided lead to a
 // repo that actually exists on Github
 function validateArguments(repoOwner, repoName, options, cb) {
@@ -79,7 +87,7 @@ function validateEnvironmentVariable(repoOwner, repoName, options, cb, cb2) {
 
     if (process.env.GITHUB_TOKEN) {
 
-        request(options, (error, response, body) => {
+        request(options, (error, response) => {
             if (response.statusCode == 401) {
                 throw Error("Invalid Github Token in .env file")
             } else {
@@ -93,9 +101,8 @@ function validateEnvironmentVariable(repoOwner, repoName, options, cb, cb2) {
 
 // Call the main function getRepoContributors and
 // provide anonymous callback that sets out where to store image files
-getRepoContributors(process.argv[2], process.argv[3], (response) => {
-    response.forEach(r => {
-        downloadImageByURL(r['avatar_url'], `${r['login']}.png`)
-    })
-})
+getRepoContributors(process.argv[2], process.argv[3], retrieveContributorsAvatars)
 
+module.exports = {
+    downloader: getRepoContributors
+}
