@@ -7,9 +7,17 @@ const GITHUB_USER  = "lexyehia",
 console.log("Welcome to the GitHub avatar downloader!")
 
 function getRepoContributors(repoOwner, repoName, cb) {
-    const requestURL = `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`
+    const options = {
+        url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
+        headers: {
+            'User-Agent': 'request'
+        }
+    }
 
-    console.log(requestURL)
+    request(options, (error, response, body) => {
+        console.log("error:", error)
+        console.log(body)
+    })
 }
 
 getRepoContributors("jquery", "jquery", (err, result) => {
