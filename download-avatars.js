@@ -22,9 +22,9 @@ function getRepoContributors(repoOwner, repoName, cb) {
 }
 
 function retrieveAvatars(response) {
-    let result = []
-    response.forEach(r => result.push(r['avatar_url']))
-    console.log(result)
+    response.forEach(r => {
+        downloadImageByURL(r['avatar_url'], `./avatars/${r['login']}.png`)
+    })
 }
 
 function downloadImageByURL(url, filePath) {
@@ -32,4 +32,3 @@ function downloadImageByURL(url, filePath) {
 }
 
 getRepoContributors("jquery", "jquery", retrieveAvatars)
-downloadImageByURL("https://avatars3.githubusercontent.com/u/46987?v=4", "./avatars/random.png")
