@@ -86,6 +86,8 @@ function validateEnvironmentVariable(repoOwner, repoName, options, cb, cb2) {
                 cb(repoOwner, repoName, options, cb2)
             }
         })
+    } else {
+        throw Error("Please make sure .env file contains a valid GITHUB_TOKEN value")
     }
 }
 
