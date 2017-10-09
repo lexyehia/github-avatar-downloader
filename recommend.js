@@ -37,7 +37,7 @@ function getContributorStars(response) {
 
 function addStarredRepo(result, repo) {
 
-    if (result[repo.id] !== undefined) {
+    if (repo.id.toString() in result) {
         result[repo.id]['stars'] += 1
     } else {
         result[repo.id] = {
@@ -68,6 +68,6 @@ function logNiceList(arr) {
     })
 }
 
-downloader(process.argv[2], process.argv[3], getContributorStars)
+//downloader(process.argv[2], process.argv[3], getContributorStars)
 
-//('lighthouse-labs', 'laser_shark', getContributorStars)
+downloader('lighthouse-labs', 'laser_shark', getContributorStars)
