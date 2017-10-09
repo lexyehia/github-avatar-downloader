@@ -28,13 +28,13 @@ function getRepoContributors(repoOwner, repoName, cb) {
 function validateArguments(repoOwner, repoName, options, cb) {
 
     // Check validity of arguments inputted
-    // if (process.argv.length !== 4) {
-    //     throw Error("Did not supply correct number of arguments, please only provide 2.")
-    // } else if (!repoOwner) {
-    //     throw Error("Did not provide proper Repo Owner name as first argument")
-    // } else if (!repoName) {
-    //     throw Error("Did not provide proper Rep Name as second argument")
-    // } else {
+    if (process.argv.length !== 4) {
+        throw Error("Did not supply correct number of arguments, please only provide 2.")
+    } else if (!repoOwner) {
+        throw Error("Did not provide proper Repo Owner name as first argument")
+    } else if (!repoName) {
+        throw Error("Did not provide proper Rep Name as second argument")
+    } else {
 
         options.url += `repos/${repoOwner}/${repoName}`
 
@@ -48,7 +48,7 @@ function validateArguments(repoOwner, repoName, options, cb) {
                 cb(options)
             }
         })
-    //}
+    }
 }
 
 function validateEnvironmentVariable(repoOwner, repoName, options, cb, cb2) {

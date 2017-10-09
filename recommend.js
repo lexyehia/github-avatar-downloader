@@ -68,6 +68,6 @@ function logNiceList(arr) {
     })
 }
 
-//downloader(process.argv[2], process.argv[3], getContributorStars)
+downloader(process.argv[2], process.argv[3], getContributorStars)
 
-downloader('lighthouse-labs', 'laser_shark', getContributorStars)
+//downloader('lighthouse-labs', 'laser_shark', getContributorStars)
