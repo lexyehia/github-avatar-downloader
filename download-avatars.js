@@ -15,12 +15,15 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
 
     request(options, (error, response, body) => {
-        console.log("error:", error)
-        console.log(body)
+        if (error) { console.log("error:", error) }
+        cb(JSON.parse(body))
     })
 }
 
-getRepoContributors("jquery", "jquery", (err, result) => {
-    console.log("Errors: ", err)
-    console.log("Result: ", result)
-})
+function retrieveAvatars(response) {
+    let result = []
+    response.forEach(r => result.push(r['avatar_url']))
+    console.log(result)
+}
+
+getRepoContributors("jquery", "jquery", retrieveAvatars)
