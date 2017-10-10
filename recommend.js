@@ -5,6 +5,7 @@ require('dotenv').config()
 const downloader = require('./helpers'),
       request    = require('request')
 
+downloader(process.argv[2], process.argv[3], getContributorStars)      
 
 function getContributorStars(response) {
 
@@ -54,6 +55,4 @@ function logNiceList(arr) {
     })
 }
 
-//downloader(process.argv[2], process.argv[3], getContributorStars)
-
-downloader('jquery', 'jquery', getContributorStars)
+//downloader('lighthouse-labs', 'laser_shark', getContributorStars)

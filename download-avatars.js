@@ -8,6 +8,10 @@ const request    = require('request'),
 
 console.log("Welcome to the GitHub avatar downloader!")
 
+// Call the main function getRepoContributors and
+// provide anonymous callback that sets out where to store image files
+downloader(process.argv[2], process.argv[3], retrieveContributorsAvatars)
+
 function retrieveContributorsAvatars(response) {
     response.forEach(r => {
         downloadImageByURL(r['avatar_url'], `${r['login']}.png`)
@@ -31,8 +35,3 @@ function downloadImageByURL(url, filePath) {
     }
 }
 
-
-
-// Call the main function getRepoContributors and
-// provide anonymous callback that sets out where to store image files
-downloader(process.argv[2], process.argv[3], retrieveContributorsAvatars)

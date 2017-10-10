@@ -20,9 +20,13 @@ function getRepoContributors(repoOwner, repoName, cb) {
         request(options, (error, response, body) => {
             if (error) console.log("error:", error)
             let totalResult = JSON.parse(body)
-            let pages = parselink(response.headers.link)
 
-            traversePagination(pages.next)
+            if (response.headers.link) {
+                let pages = parselink(response.headers.link)    
+                traversePagination(pages.next)                
+            } else {
+                cb(totalResult)
+            }
 
             function traversePagination(next) {
                 options.url = next
@@ -33,7 +37,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
                     totalResult.push(...JSON.parse(bd))
                     pages = parselink(res.headers.link)
 
-                    if(pages.next) {
+                    if (pages.next) {
                         traversePagination(pages.next)
                     } else {
                         cb(totalResult)
