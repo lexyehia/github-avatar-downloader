@@ -19,6 +19,7 @@
   "homepage": "https://github.com/lexyehia/github-avatar-downloader#readme",
   "dependencies": {
     "dotenv": "^4.0.0",
+    "parse-links": "^0.1.0",
     "request": "^2.83.0"
   }
 }

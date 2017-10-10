@@ -8,66 +8,52 @@ const downloader = require('./helpers'),
 
 function getContributorStars(response) {
 
-    let result = {}
+    let result = []
 
     response.forEach((contributor, index) => {
         let options = {
-            url: `https://${process.env.GITHUB_TOKEN}@api.github.com/users/${contributor.login}/starred`,
+            url: `https://${process.env.GITHUB_TOKEN}@api.github.com/users/${contributor.login}/starred?per_page=100`,
             headers: {
                 'User-Agent': 'LHL Exercise'
             }
         }
 
-        request.get(options, (err, res, body) => {
+        request(options, (err, res, body) => {
             if (err) throw err
 
-            body = JSON.parse(body)
-
-            for (let item of body) {
-                addStarredRepo(result, item)
-            }
+            JSON.parse(body).forEach(repo => {
+                addStarredRepo(result, repo)
+            })
 
             if (index === response.length - 1) {
-                const arr = compareStarredRepo(result)
-                logNiceList(arr)
+                result.sort((a, b) => b[3] - a[3])
+                logNiceList(result.slice(0, 4))
             }
         })
     })
 }
 
 function addStarredRepo(result, repo) {
+    let existingEntry = result.find(e => e[0] === repo.id)
 
-    if (repo.id.toString() in result) {
-        result[repo.id]['stars'] += 1
+    if (existingEntry) {
+        existingEntry[3]++
     } else {
-        result[repo.id] = {
-            'id'   : repo.id,
-            'owner': repo.owner.login,
-            'name' : repo.name,
-            'stars': 1
-        }
+        result.push([
+            repo.id,
+            repo.owner.login,
+            repo.name,
+            1
+        ])
     }
-}
-
-function compareStarredRepo(result) {
-    let firstFive = []
-
-    Object.keys(result).sort((a, b) => result[b].stars - result[a].stars)
-
-    for (let repo in result) {
-        if (firstFive.length === 5) break
-        firstFive.push(result[repo])
-    }
-
-    return firstFive
 }
 
 function logNiceList(arr) {
     arr.forEach(e => {
-        console.log(`[ ${e.stars} stars ] ${e.owner} / ${e.name}`)
+        console.log(`[ ${e[3]} stars ] ${e[1]} / ${e[2]}`)
     })
 }
 
-downloader(process.argv[2], process.argv[3], getContributorStars)
+//downloader(process.argv[2], process.argv[3], getContributorStars)
 
-//downloader('lighthouse-labs', 'laser_shark', getContributorStars)
+downloader('jquery', 'jquery', getContributorStars)
